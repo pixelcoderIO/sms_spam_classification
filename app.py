@@ -1,18 +1,16 @@
- 
 import streamlit as st
 import pickle
 import nltk
-import string
 import re
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
- 
+
 st.set_page_config(
     page_title="CyberShield | SMS Security",
     layout="wide"
 )
 
- 
+
 @st.cache_resource
 def load_model():
     with open("model.pkl", "rb") as f:
@@ -23,14 +21,15 @@ def load_model():
 
     return model, vectorizer
 
+
 model, tfidf = load_model()
 
- 
 nltk.download("punkt_tab", quiet=True)
 nltk.download("stopwords", quiet=True)
 
 ps = PorterStemmer()
 stop_words = set(stopwords.words("english"))
+
 
 def transform_text(text):
     text = text.lower()
@@ -44,7 +43,7 @@ def transform_text(text):
 
     return " ".join(words)
 
- 
+
 st.markdown("""
 <style>
 .stApp {
@@ -132,14 +131,15 @@ footer {
 </style>
 """, unsafe_allow_html=True)
 
- 
+
 st.markdown("""
 <div class="hero">
-    <h1> Cyber<span>Shield</span></h1>
-    <p>AI-Powered SMS Spam Detection </p>
+    <h1>Cyber<span>Shield</span></h1>
+    <p>AI-Powered SMS Spam Detection</p>
 </div>
 """, unsafe_allow_html=True)
- 
+
+
 st.markdown('<div class="panel">', unsafe_allow_html=True)
 
 st.subheader("SMS Security Scanner")
@@ -152,11 +152,11 @@ message = st.text_area(
     label_visibility="collapsed"
 )
 
-scan = st.button(" SCAN MESSAGE")
+scan = st.button("SCAN MESSAGE")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
- 
+
 if scan:
 
     if not message.strip():
@@ -174,12 +174,12 @@ if scan:
             confidence = max(probabilities) * 100
 
         st.markdown("---")
-        st.subheader(" Security Analysis")
+        st.subheader("Security Analysis")
 
         if prediction == 1:
             st.markdown("""
             <div class="result-spam">
-                <h2> SPAM DETECTED</h2>
+                <h2>SPAM DETECTED</h2>
                 <p>This message has been classified as Spam.</p>
             </div>
             """, unsafe_allow_html=True)
@@ -187,16 +187,16 @@ if scan:
         else:
             st.markdown("""
             <div class="result-safe">
-                <h2> SAFE MESSAGE (HAM)</h2>
+                <h2>SAFE MESSAGE (HAM)</h2>
                 <p>This message has been classified as Ham.</p>
             </div>
             """, unsafe_allow_html=True)
 
         st.write("")
 
-        st.markdown("### Model Prediction   Probablity ")
-        st.progress(int(  Probablity ))
-        st.write(f" Probablity: **{ confidence:.2f}%**")
+        st.markdown("### Model Prediction Probability")
+        st.progress(int(confidence))
+        st.write(f"Probability: **{confidence:.2f}%**")
 
         # Suspicious keyword analysis
         suspicious_words = [
@@ -213,7 +213,7 @@ if scan:
             )
         ]
 
-        st.markdown(" Message Analysis")
+        st.markdown("### Message Analysis")
 
         a, b = st.columns(2)
 
@@ -230,6 +230,7 @@ if scan:
             st.write(f"Characters: {len(message)}")
             st.write(f"Words: {len(message.split())}")
 
+        # Scan history
         if "history" not in st.session_state:
             st.session_state.history = []
 
@@ -239,11 +240,11 @@ if scan:
             "Confidence": f"{confidence:.2f}%"
         })
 
- 
+
 if "history" in st.session_state and st.session_state.history:
 
     st.markdown("---")
-    st.subheader(" Recent Scan History")
+    st.subheader("Recent Scan History")
 
     st.dataframe(
         st.session_state.history,
@@ -251,12 +252,11 @@ if "history" in st.session_state and st.session_state.history:
         hide_index=True
     )
 
- 
+
 st.markdown("---")
 
 st.markdown("""
 <div style="text-align:center;color:#8492b5;padding:15px;">
-     CyberShield | SMS Spam Detection System<br>
-     
+    CyberShield | SMS Spam Detection System
 </div>
 """, unsafe_allow_html=True)
