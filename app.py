@@ -10,6 +10,42 @@ st.set_page_config(
     layout="wide"
 )
   
+ga4_tracker = st.components.v2.component(
+    name="ga4_tracker",
+    html="<div></div>",
+    js="""
+    export default function(component) {
+        const measurementId = "G-NQKDYXHGNG";
+
+        if (!window.dataLayer) {
+            window.dataLayer = [];
+            window.gtag = function() {
+                window.dataLayer.push(arguments);
+            };
+            window.gtag('js', new Date());
+        }
+
+        if (!window.__cybershield_ga4_script) {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src =
+                'https://www.googletagmanager.com/gtag/js?id='
+                + measurementId;
+            document.head.appendChild(script);
+            window.__cybershield_ga4_script = true;
+        }
+
+        if (!window.__cybershield_ga4_configured) {
+            window.gtag('config', measurementId);
+            window.__cybershield_ga4_configured = true;
+        }
+
+        return () => {};
+    }
+)
+
+ga4_tracker(key="ga4_tracker")
+
 
 @st.cache_resource
 def load_model():
