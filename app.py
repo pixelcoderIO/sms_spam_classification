@@ -10,7 +10,22 @@ st.set_page_config(
     page_title="CyberShield | SMS Security",
     layout="wide"
 )
-
+if "ga4_tracked" not in st.session_state:
+    components.html(
+        """
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-NQKDYXHGNG"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-NQKDYXHGNG', {
+                'page_location': 'https://cybershield-spam-detector.streamlit.app/'
+            });
+        </script>
+        """,
+        height=0
+    )
+    st.session_state["ga4_tracked"] = True
 
 @st.cache_resource
 def load_model():
